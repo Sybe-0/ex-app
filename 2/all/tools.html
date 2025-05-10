@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Memo yang Bisa Ditulis dan Drag & Drop</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #fdfdfd;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      user-select: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .memo {
+      position: absolute;
+      top: 100px;
+      left: 100px;
+      width: 300px;
+      max-width: 90vw;
+      background: #fff9c4;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .memo-header {
+      background: #fbe600;
+      padding: 12px 16px;
+      cursor: grab;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #5a4d00;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .memo-header:active {
+      cursor: grabbing;
+    }
+
+    .memo-close {
+      background: #5a4d00;
+      border: none;
+      color: #fff9c4;
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 1;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .memo-close:hover {
+      background: #6f5a00;
+    }
+
+    .memo-content {
+      padding: 12px 16px;
+      font-size: 1rem;
+      color: #4a4a4a;
+      min-height: 150px;
+      outline: none;
+      overflow-y: auto;
+    }
+
+    /* Ensure text area inside can scroll if content large */
+    .memo-content:focus {
+      outline: 2px solid #fbe600;
+    }
+
+    @media (max-width: 400px) {
+      .memo {
+        width: 90vw;
+        left: 5vw !important;
+        top: 50px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="memo" id="memo" role="region" aria-label="Memo yang bisa ditulis dan dipindahkan">
+    <div class="memo-header" id="memoHeader" tabindex="0">
+      Memo
+      <button class="memo-close" aria-label="Tutup memo" id="closeBtn">&times;</button>
+    </div>
+    <div class="memo-content" contenteditable="true" aria-multiline="true" spellcheck="true" role="textbox"
+      aria-label="Isi memo">
+      Tulis memo Anda di sini...
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const memo = document.getElementById('memo');
+      const header = document.getElementById('memoHeader');
+      const closeBtn = document.getElementById('closeBtn');
+
+      let isDragging = false;
+      let startX = 0, startY = 0;
+      let origX = 0, origY = 0;
+
+      function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max);
+      }
+
+      function onPointerDown(e) {
+        // Only drag on left mouse button or equivalent pointer
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+        e.preventDefault();
+        isDragging = true;
+        header.setPointerCapture(e.pointerId);
+
+        startX = e.clientX;
+        startY = e.clientY;
+
+        const style = window.getComputedStyle(memo);
+        origX = parseInt(style.left, 10) || 0;
+        origY = parseInt(style.top, 10) || 0;
+
+        header.style.cursor = 'grabbing';
+      }
+      function onPointerMove(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+
+        let dx = e.clientX - startX;
+        let dy = e.clientY - startY;
+
+        let newX = origX + dx;
+        let newY = origY + dy;
+
+        const margin = 10;
+        const maxX = window.innerWidth - memo.offsetWidth - margin;
+        const maxY = window.innerHeight - memo.offsetHeight - margin;
+
+        newX = clamp(newX, margin, maxX);
+        newY = clamp(newY, margin, maxY);
+
+        memo.style.left = newX + 'px';
+        memo.style.top = newY + 'px';
+      }
+      function onPointerUp(e) {
+        isDragging = false;
+        header.style.cursor = 'grab';
+        header.releasePointerCapture(e.pointerId);
+      }
+
+      header.addEventListener('pointerdown', onPointerDown);
+      header.addEventListener('pointermove', onPointerMove);
+      header.addEventListener('pointerup', onPointerUp);
+      header.addEventListener('pointercancel', onPointerUp);
+
+      // Close memo button hides memo
+      closeBtn.addEventListener('click', () => {
+        memo.style.display = 'none';
+      });
+    })();
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+    <style>
+
+        form.dragging {
+            background-color: #ecfc16;
+            margin: 0.8rem;
+            padding: 1rem 0.8rem;
+            display: flex;
+            flex-direction: column;
+            width: 280px;
+            position: absolute;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        input {
+            margin: 0.4rem 0;
+        }
+
+        input.name {
+            margin-top: 1rem;
+        }
+
+        button.sub-btn {
+            margin-top: 0.6rem;
+        }
+    </style>
+</head>
+<body>
+    <head class="header">
+        <form name="register" action="relative" class="dragging" method="post" target="_self">
+            <input name="username" class="name" type="text" placeholder="Name">
+            <input name="email" class="mail" type="text" placeholder="Email">
+            <input name="password" class="pass" type="password" placeholder="Password">
+            <button class="sub-btn" type="submit">Submit</button>
+        </form>
+    </head>
+
+    <script>
+        (function () {
+          const memo = document.querySelector('.header');
+          const header = document.querySelector('.dragging');
+    
+          let isDragging = false;
+          let startX = 0, startY = 0;
+          let origX = 0, origY = 0;
+    
+          function clamp(value, min, max) {
+            return Math.min(Math.max(value, min), max);
+          }
+    
+          function onPointerDown(e) {
+            if (e.pointerType === 'mouse' && e.button !== 0) return;
+    
+            e.preventDefault();
+            isDragging = true;
+            header.setPointerCapture(e.pointerId);
+    
+            startX = e.clientX;
+            startY = e.clientY;
+    
+            const style = window.getComputedStyle(memo);
+            origX = parseInt(style.left, 10) || 0;
+            origY = parseInt(style.top, 10) || 0;
+    
+            header.style.cursor = 'grabbing';
+          }
+          function onPointerMove(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+    
+            let dx = e.clientX - startX;
+            let dy = e.clientY - startY;
+    
+            let newX = origX + dx;
+            let newY = origY + dy;
+    
+            const margin = 10;
+            const maxX = window.innerWidth - memo.offsetWidth - margin;
+            const maxY = window.innerHeight - memo.offsetHeight - margin;
+    
+            newX = clamp(newX, margin, maxX);
+            newY = clamp(newY, margin, maxY);
+    
+            memo.style.left = newX + 'px';
+            memo.style.top = newY + 'px';
+          }
+          function onPointerUp(e) {
+            isDragging = false;
+            header.style.cursor = 'grab';
+            header.releasePointerCapture(e.pointerId);
+          }
+    
+          header.addEventListener('pointerdown', onPointerDown);
+          header.addEventListener('pointermove', onPointerMove);
+          header.addEventListener('pointerup', onPointerUp);
+          header.addEventListener('pointercancel', onPointerUp);
+        })();
+      </script>
+</body>
+</html>

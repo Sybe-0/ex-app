@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memorize</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #e0c498;
+            color: #890ab7;
+        }
+
+        .def-btn {
+            margin: 5px;
+            padding: 10px;
+        }
+
+        .plus {
+            position: relative;
+        }
+
+        .window {
+            box-shadow: 0 0 0.5rem #890ab7;
+            background-color: #b89a698d;
+            border-radius: 5px;
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        .window-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #c75493;
+            border-radius: 5px 5px 0 0;
+            cursor: grab;
+        }
+
+        .window-header p {
+            margin: 0 5px;
+            font-size: 16px;
+        }
+
+        textarea {
+            margin: 5px;
+            margin-top: 8px;
+            border: none;
+            height: 100%;
+            align-self: center;
+            background-color: transparent;
+            color: #890ab7;
+        }
+
+        .close-btn {
+            margin: 0 5px;
+            cursor: pointer;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 2px 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="def-btn">
+        <button class="plus" onclick="create()"> + </button>
+        <button class="hapus-semua" onclick="reset()">Reset</button>
+    </div>
+    <div class="window-popup"></div>
+    <div class="window"></div>
+
+    <script>
+
+        const memoContainer = document.querySelector(".window-popup");
+
+        function create() {
+
+            let memo = document.createElement("div");
+            memo.className = "window";
+            memo.style.top = Math.random() * (window.innerHeight - 20) + 'px';
+            memo.style.left = Math.random() * (window.innerWidth - 220) + 'px';
+
+            const header = document.createElement("div");
+            header.className = "window-header";
+
+            const title = document.createElement("p");
+            title.innerText = "Pengingat";
+
+            const closeButton = document.createElement("button");
+            closeButton.className = "close-btn";
+            closeButton.innerText = "x";
+            closeButton.addEventListener("click", function () {
+                memoContainer.removeChild(memo);
+            });
+
+            header.appendChild(title);
+            header.appendChild(closeButton);
+            memo.appendChild(header);
+
+            const textArea = document.createElement("textarea");
+            memo.appendChild(textArea);
+
+            memoContainer.appendChild(memo);
+        }
+
+        // drag and drop
+        (function () {
+            const draggable = document.querySelector('.window');
+            let isDragging = false;
+            let startX = 0;
+            let startY = 0;
+            let origX = 0;
+            let origY = 0;
+
+            function onPointerDown(e) {
+                e.preventDefault();
+                isDragging = true;
+                draggable.setPointerCapture(e.pointerId);
+                startX = e.clientX;
+                startY = e.clientY;
+                const style = window.getComputedStyle(draggable);
+                origX = parseInt(style.left, 10) || 0;
+                origY = parseInt(style.top, 10) || 0;
+                draggable.style.cursor = 'grabbing';
+            }
+
+            function onPointerMove(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                let newX = origX + dx;
+                let newY = origY + dy;
+
+                const margin = 10;
+                const maxX = window.innerWidth - draggable.offsetWidth - margin;
+                const maxY = window.innerHeight - draggable.offsetHeight - margin;
+
+                newX = Math.min(Math.max(newX, margin), maxX);
+                newY = Math.min(Math.max(newY, margin), maxY);
+
+                draggable.style.left = newX + 'px';
+                draggable.style.top = newY + 'px';
+            }
+
+            function onPointerUp(e) {
+                isDragging = false;
+                draggable.style.cursor = 'grab';
+                draggable.releasePointerCapture(e.pointerId);
+            }
+
+            draggable.style.left = 'calc(50% - 60px)';
+            draggable.style.top = 'calc(50% - 60px)';
+
+            draggable.addEventListener('pointerdown', onPointerDown);
+            draggable.addEventListener('pointermove', onPointerMove);
+            draggable.addEventListener('pointerup', onPointerUp);
+            draggable.addEventListener('pointercancel', onPointerUp);
+        })();
+
+        function reset() {
+            location.reload();
+        }
+
+        //draganddrop
+
+    </script>
+</body>
+
+</html>
