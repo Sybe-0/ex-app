@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Negate Operator</title>
+</head>
+<body>
+    <p>
+        Operator pembanding atau ! digunakan untuk membalikan keadaan aslinya. Jika keadaan value bernilai true, digunakan Negate
+        operator maka hasilnya akan false. Note: Negate bisa digunakan dimana saja, khususnya yang berhubungan dengan boolean.
+    </p>
+
+    <script>
+        let cash = 300;
+        let cost = 400;
+        let buyIt = cash < cost;
+        console.log(!buyIt || (cash < cost));//true
+        
+        let skenario1 = true;
+        let skenario2 = false;
+        let drama = skenario1 && skenario2;
+        console.log(!drama || drama);//true
+        
+    </script>
+</body>
+</html>

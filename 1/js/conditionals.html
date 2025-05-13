@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conditionals Javascript</title>
+</head>
+
+<body>
+    <p>
+        Berjalan atau tidaknya True atau False dinamakan sebuah kondisi (conditions). Pernyataan yang
+        membutuhkan kondisi dari true atau false disebut conditionals. Namun juga bisa diseleksi menggunakan pernyataan IF,
+        apakah
+        code tertentu akan terlewati (true) atau tidak (false). Yang tentu saja jika kondisi nya adalah false maka
+        code tersebut
+        akan dilangkahi.
+    </p>
+
+    <script>
+        // if (condition(true/false)) {
+        //     console.log("Hello there!. ")
+        // }
+
+        let cat = "momo";
+        if (cat) {
+            console.log(cat);
+            
+        }
+        if ("bocil") {
+            console.log("bocil");
+            
+        }
+
+        //IF diperlukan jika kondisi bernilai true. Tapi jika false, if tidak akan berjalan.
+        let jam = 7;
+        if (jam > 10) {
+            console.log("Tidak akan ditampilkan");
+        }
+
+        //maka kita perlu ELSE yang dimana jika opsi pertama (IF) tidak jalan, maka opsi kedua (ELSE) yang akan dijalankan.
+        let hour = 14;
+        if (hour < 12) {
+            console.log("Good Morning");
+        } else {
+            console.log("Good Afternoon");
+        }
+
+        //Tetapi dalam kondisi tertentu ELSE juga dapat diteruskan menjadi true, yaitu dengan ditambahkan IF lagi.
+        let hours = 14;
+        if (hours < 12) {
+            console.log("Good Morning");
+        } else if (hours < 17) {
+            console.log("Good Afternoon");
+        }
+        
+        //ELSE IF dapat ditambahkan sebanyak yang dimau.
+        let hou = 18;
+        if (hou < 12) {
+            console.log("Good Morning");
+        } else if (hou < 17) {
+            console.log("Good Afternoon");
+        } else {
+            console.log("Good Evening");
+        }
+    </script>
+</body>
+
+</html>
